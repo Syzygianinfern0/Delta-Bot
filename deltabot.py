@@ -65,7 +65,7 @@ def actual_paginator(bot: telegram.Bot, url: str, stop: int):
     results = dict()
     num_results = 0
     for page in range(stop):
-        for thing in get_results(url + f"/{page + 1}/"):
+        for thing in get_results(url + f"/{page + 1}/", bot):
             # TODO: Keep Track :(
             # if not is_already_exist("QxR", str(thing)):
             #     keep_a_record("QxR", str(thing))
