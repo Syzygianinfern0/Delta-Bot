@@ -37,10 +37,12 @@ def paginator(bot, update):
 
 
 def actual_paginator(bot: telegram.Bot, url: str, stop: int):
-    for thing in get_results(url, stop):
-        if not is_already_exist("QxR", str(thing)):
-            keep_a_record("QxR", str(thing))
-        bot.send_message(triggerx_chat_id, thing)
+    for page in range(stop):
+        for thing in get_results(url + f"/{page+1}/"):
+            # if not is_already_exist("QxR", str(thing)):
+            #     keep_a_record("QxR", str(thing))
+            print(thing)
+            bot.send_message(triggerx_chat_id, thing)
 
 
 def main():
