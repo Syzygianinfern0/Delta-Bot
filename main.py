@@ -1,4 +1,4 @@
-from test import get_new_results, is_already_exist, keep_a_record
+from utils.scrapers import get_new_results, is_already_exist, keep_a_record
 
 
 def main():
