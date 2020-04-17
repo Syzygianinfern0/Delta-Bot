@@ -6,7 +6,7 @@ from telegram.ext import Updater, CommandHandler
 from utils.scrapers import get_results
 from utils.toolkits import get_uploader_url
 
-DEBUG = False
+DEBUG = True
 
 
 def test_leechx(bot: telegram.bot.Bot, update: telegram.update.Update):
@@ -24,8 +24,8 @@ def uploader(bot: telegram.Bot, update: telegram.Update):
     :param update:
     :return:
     """
-    if DEBUG:
-        bot.send_message(triggerx_chat_id[0], f"Update: {update}")
+    # if DEBUG:
+    #     bot.send_message(triggerx_chat_id[0], f"Update: {update}")
 
     cmd = update.message.text.split(" ")
     url = get_uploader_url(cmd[1])
@@ -70,6 +70,8 @@ def actual_paginator(bot: telegram.Bot, url: str, stop: int):
             # if not is_already_exist("QxR", str(thing)):
             #     keep_a_record("QxR", str(thing))
             print(thing)
+            if DEBUG:
+                bot.send_message(triggerx_chat_id[0], thing)
             num_results += 1
             results[num_results] = thing
         bot.send_message(triggerx_chat_id[-1], f"Page {page + 1} scraped!")
