@@ -4,7 +4,7 @@ import requests
 import telegram
 from bs4 import BeautifulSoup as bs
 
-from deltabot import triggerx_chat_id
+from configs import debugx_chat_id
 
 USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.92 Safari/537.36"
 header = {'User-Agent': USER_AGENT}
@@ -19,7 +19,7 @@ def get_results(url: str, bot: telegram.Bot):
     response = requests.get(url, headers=header)
     soup = bs(response.text, "lxml")
     if len(soup.text) == 0:
-        bot.send_message(triggerx_chat_id[3], "Soup is empty")
+        bot.send_message(debugx_chat_id, "Proxy Soup is empty")
     resultset = soup.find_all("tr")[1:]
     if len(resultset) == 0:
         return
@@ -47,6 +47,6 @@ def get_magnet_from_page(url, bot):
     response = requests.get(url, headers={'User-Agent': USER_AGENT})
     soup = bs(response.text, "lxml")
     if len(soup.text) == 0:
-        bot.send_message(triggerx_chat_id[3], "Soup is empty")
+        bot.send_message(debugx_chat_id, "Magnet Soup is empty")
     resultset = soup.find('a', attrs={'href': re.compile("magnet.+")}).attrs['href']
     return resultset

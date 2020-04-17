@@ -3,13 +3,15 @@ import time
 import telegram
 from telegram.ext import Updater, CommandHandler
 
+from configs import *
 from utils.scrapers import get_results
 from utils.toolkits import get_uploader_url
 
-DEBUG = True
+DEBUG = False
 
 
 def test_leechx(bot: telegram.bot.Bot, update: telegram.update.Update):
+    bot.send_message(debugx_chat_id, f"Triggered from {update.effective_chat}")
     for leech_bot in leech_bots:
         for msg in test_downs:
             bot.send_message(
@@ -33,7 +35,7 @@ def uploader(bot: telegram.Bot, update: telegram.Update):
     if len(cmd) == 3:
         stop = int(cmd[2])
     if DEBUG:
-        bot.send_message(triggerx_chat_id[0], f"URL: {url} \nStop: {stop}")
+        bot.send_message(debugx_chat_id, f"URL: {url} \nStop: {stop}")
     actual_paginator(bot, url, stop)
 
 
@@ -45,7 +47,7 @@ def paginator(bot: telegram.Bot, update: telegram.Update):
     :return:
     """
     if DEBUG:
-        bot.send_message(triggerx_chat_id[0], f"Update: {update}")
+        bot.send_message(debugx_chat_id, f"Update: {update}")
 
     cmd = update.message.text.split(" ")
     url: str = cmd[1]
@@ -57,7 +59,7 @@ def paginator(bot: telegram.Bot, update: telegram.Update):
     if len(cmd) == 3:
         stop = int(cmd[2])
     if DEBUG:
-        bot.send_message(triggerx_chat_id[0], f"URL: {url} \nStop: {stop}")
+        bot.send_message(debugx_chat_id, f"URL: {url} \nStop: {stop}")
     actual_paginator(bot, url, stop)
 
 
@@ -70,8 +72,7 @@ def actual_paginator(bot: telegram.Bot, url: str, stop: int):
             # if not is_already_exist("QxR", str(thing)):
             #     keep_a_record("QxR", str(thing))
             print(thing)
-            if DEBUG:
-                bot.send_message(triggerx_chat_id[0], thing)
+            bot.send_message(debugx_chat_id, thing)
             num_results += 1
             results[num_results] = thing
         bot.send_message(triggerx_chat_id[-1], f"Page {page + 1} scraped!")
@@ -105,10 +106,4 @@ def main():
 
 
 if __name__ == "__main__":
-    leech_bots = ["alpha", "beta", "gamma"]
-    test_downs = [
-        "https://speed.hetzner.de/1GB.bin",
-        "https://speed.hetzner.de/100MB.bin",
-    ]
-    triggerx_chat_id = [-1001415869464, -1001283315074, -1001388834609]
     main()
