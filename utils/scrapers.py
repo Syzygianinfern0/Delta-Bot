@@ -4,10 +4,7 @@ import requests
 import telegram
 from bs4 import BeautifulSoup as bs
 
-from configs import debugx_chat_id
-
-USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.92 Safari/537.36"
-header = {'User-Agent': USER_AGENT}
+from configs import *
 
 
 def get_results(url: str, bot: telegram.Bot):
@@ -44,7 +41,7 @@ def get_results(url: str, bot: telegram.Bot):
 
 
 def get_magnet_from_page(url, bot):
-    response = requests.get(url, headers={'User-Agent': USER_AGENT})
+    response = requests.get(url, headers=header)
     soup = bs(response.text, "lxml")
     if len(soup.text) == 0:
         bot.send_message(debugx_chat_id, "Magnet Soup is empty")
