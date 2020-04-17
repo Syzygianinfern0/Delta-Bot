@@ -1,7 +1,10 @@
+import re
+
 import requests
 from bs4 import BeautifulSoup as bs
 
-MAGNET_LINK_CLASS = "l14efb2f6559484e5de81032020f86f3807c37a91 l87aa9eaddb6c504a87d8bc6c3f4786ce506dc2e3 l8e43fc27f870f333ea0aa3118280bf6d3e1785c4"
+USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.92 Safari/537.36"
+header = {'User-Agent': USER_AGENT}
 
 
 def get_results(url: str):
@@ -10,7 +13,7 @@ def get_results(url: str):
     :param stop: Stops at page number
     :return: A generator object.
     """
-    response = requests.get(url)
+    response = requests.get(url, headers=header)
     soup = bs(response.text, "lxml")
     resultset = soup.find_all("tr")[1:]
     if len(resultset) == 0:
@@ -36,7 +39,7 @@ def get_results(url: str):
 
 
 def get_magnet_from_page(url):
-    response = requests.get(url)
+    response = requests.get(url, headers={'User-Agent': USER_AGENT})
     soup = bs(response.text, "lxml")
-    resultset = soup.find("a", {"class": MAGNET_LINK_CLASS})
-    return resultset.attrs['href']
+    resultset = soup.find('a', attrs={'href': re.compile("magnet.+")}).attrs['href']
+    return resultset

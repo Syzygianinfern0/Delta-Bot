@@ -37,28 +37,53 @@ def uploader(bot: telegram.Bot, update: telegram.Update):
     actual_paginator(bot, url, stop)
 
 
-def paginator(bot, update):
-    pass
+def paginator(bot: telegram.Bot, update: telegram.Update):
+    """
+    [Link_to_page_1] [[Stop=2]...]
+    :param bot:
+    :param update:
+    :return:
+    """
+    if DEBUG:
+        bot.send_message(triggerx_chat_id[0], f"Update: {update}")
+
+    cmd = update.message.text.split(" ")
+    url: str = cmd[1]
+    if url.endswith("/1/"):
+        url = url[:-3]
+    if url.endswith("/"):
+        url = url[:-1]
+    stop = 2
+    if len(cmd) == 3:
+        stop = int(cmd[2])
+    if DEBUG:
+        bot.send_message(triggerx_chat_id[0], f"URL: {url} \nStop: {stop}")
+    actual_paginator(bot, url, stop)
 
 
 def actual_paginator(bot: telegram.Bot, url: str, stop: int):
     results = dict()
     num_results = 0
     for page in range(stop):
-        for thing in get_results(url + f"/{page+1}/"):
+        for thing in get_results(url + f"/{page + 1}/"):
+            # TODO: Keep Track :(
             # if not is_already_exist("QxR", str(thing)):
             #     keep_a_record("QxR", str(thing))
             print(thing)
             num_results += 1
             results[num_results] = thing
-        bot.send_message(triggerx_chat_id[-1], f"Page {page+1} scraped!")
+        bot.send_message(triggerx_chat_id[-1], f"Page {page + 1} scraped!")
+    flood_my_dict(bot, results)
 
+
+def flood_my_dict(bot, results):
     group = 0
     idx = 0
     for result in results.values():
         idx += 1
         print(idx)
-        bot.send_message(triggerx_chat_id[group], str(result["follow_url"]))
+        leech_cmd = f"/mirror@{leech_bots[idx % 3]}_leechx_bot "
+        bot.send_message(triggerx_chat_id[group], leech_cmd + str(result["magnet"]))
         if idx / 18 == 1:
             group += 1
             group = group % 3
