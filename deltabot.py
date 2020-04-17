@@ -1,9 +1,10 @@
-from telegram.ext import Updater, CommandHandler
+import time
+
 import telegram
-from utils.file_handlers import keep_a_record, is_already_exist
+from telegram.ext import Updater, CommandHandler
+
 from utils.scrapers import get_results
 from utils.toolkits import get_uploader_url
-import time
 
 DEBUG = False
 
