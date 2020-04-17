@@ -1,3 +1,6 @@
+import os
+
+
 def keep_a_record(uploader: str, record):
     """
     :param uploader: uploader name mentioned in the url to the profile of the uploader
@@ -18,11 +21,12 @@ def is_already_exist(fname: str, record) -> bool:
      False if doesnt match. False means search result is new.
     :raise: if the file not found
     """
-    with open(fname, "r") as file:
-        try:
+
+    try:
+        with open(fname, "r") as file:
             if file.readline() == record:
                 return True
             else:
                 return False
-        except FileNotFoundError:
-            open(fname, 'a').close()
+    except FileNotFoundError:
+        os.mknod(fname)
