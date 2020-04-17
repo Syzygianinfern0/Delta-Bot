@@ -25,4 +25,4 @@ def is_already_exist(uploader: str, record) -> bool:
             else:
                 return False
         except FileNotFoundError:
-            return False
+            open('log_torrents', 'a').close()

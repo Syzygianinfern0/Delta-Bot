@@ -1,24 +1,41 @@
 from telegram.ext import Updater, CommandHandler
 import telegram
+from utils.file_handlers import keep_a_record, is_already_exist
+from utils.scrapers import get_results
+from utils.toolkits import get_uploader_url
 
 
 def test_leechx(bot: telegram.bot.Bot, update: telegram.update.Update):
     for leech_bot in leech_bots:
         for msg in test_downs:
-            bot.send_message(leechx_chat_id, f"/mirror@{leech_bot}_leechx_bot {msg}")
+            bot.send_message(triggerx_chat_id, f"/mirror@{leech_bot}_leechx_bot {msg}")
 
 
-def uploader(bot, update):
-
-    actual_paginator(bot, None, None)
+def uploader(bot: telegram.Bot, update: telegram.Update):
+    """
+    [Name] [[Stop=2]...]
+    :param bot:
+    :param update:
+    :return:
+    """
+    print(update)
+    cmd = update.message.text.split(" ")
+    url = get_uploader_url(cmd[1])
+    stop = 2
+    if len(cmd) == 2:
+        stop = cmd[2]
+    actual_paginator(bot, url, stop)
 
 
 def paginator(bot, update):
     pass
 
 
-def actual_paginator(bot, url, stop):
-    pass
+def actual_paginator(bot: telegram.Bot, url: str, stop: int):
+    for thing in get_results(url, stop):
+        if not is_already_exist("QxR", str(thing)):
+            keep_a_record("QxR", str(thing))
+        bot.send_message(triggerx_chat_id, thing)
 
 
 def main():
@@ -37,5 +54,5 @@ if __name__ == "__main__":
         "https://speed.hetzner.de/1GB.bin",
         "https://speed.hetzner.de/100MB.bin",
     ]
-    leechx_chat_id = -1001415869464
+    triggerx_chat_id = -1001415869464
     main()
