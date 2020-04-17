@@ -9,7 +9,8 @@ def get_results(url: str, stop=2):
     :return: A generator object.
     """
     for page in range(stop):
-        response = requests.get(url + f"/{page+1}")
+        paged_url = url + f"/{page+1}/"
+        response = requests.get(paged_url)
         soup = bs(response.text, "lxml")
         resultset = soup.find_all("tr")[1:]
         if len(resultset) == 0:

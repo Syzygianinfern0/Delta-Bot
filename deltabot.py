@@ -4,6 +4,8 @@ from utils.file_handlers import keep_a_record, is_already_exist
 from utils.scrapers import get_results
 from utils.toolkits import get_uploader_url
 
+DEBUG = True
+
 
 def test_leechx(bot: telegram.bot.Bot, update: telegram.update.Update):
     for leech_bot in leech_bots:
@@ -18,12 +20,15 @@ def uploader(bot: telegram.Bot, update: telegram.Update):
     :param update:
     :return:
     """
-    print(update)
-    cmd = update.message.text.split(" ")
+    bot.send_message(triggerx_chat_id, f"Update: {update}")
+    if DEBUG:
+        cmd = update.message.text.split(" ")
     url = get_uploader_url(cmd[1])
     stop = 2
-    if len(cmd) == 2:
-        stop = cmd[2]
+    # if len(cmd) == 2:
+    #     stop = cmd[2]
+    if DEBUG:
+        bot.send_message(triggerx_chat_id, f"URL: {url} \nStop: {stop}")
     actual_paginator(bot, url, stop)
 
 
