@@ -24,7 +24,7 @@ def is_already_exist(fname: str, record) -> bool:
 
     try:
         with open(fname, "r") as file:
-            if file.readline() == record:
+            if record in file.read():
                 return True
             else:
                 return False
