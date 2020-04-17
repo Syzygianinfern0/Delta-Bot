@@ -40,8 +40,8 @@ def keep_a_record(uploader: str, record):
      It is adviced to use the url property as the record
     :return: None
     """
-    with open(uploader, 'w') as file:
-        file.write(record)
+    with open(uploader, 'a') as file:
+        file.write(record + '\n')
 
 
 def is_already_exist(uploader: str, record) -> bool:
