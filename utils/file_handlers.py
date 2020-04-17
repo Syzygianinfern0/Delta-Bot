@@ -9,7 +9,7 @@ def keep_a_record(uploader: str, record):
         file.write(record + "\n")
 
 
-def is_already_exist(uploader: str, record) -> bool:
+def is_already_exist(fname: str, record) -> bool:
     """
     :param uploader: uploader name mentioned in the url to the profile of the uploader
     :param record: this is used to pevent posting same torrent again and again.
@@ -18,11 +18,11 @@ def is_already_exist(uploader: str, record) -> bool:
      False if doesnt match. False means search result is new.
     :raise: if the file not found
     """
-    with open(uploader, "r") as file:
+    with open(fname, "r") as file:
         try:
             if file.readline() == record:
                 return True
             else:
                 return False
         except FileNotFoundError:
-            open('log_torrents', 'a').close()
+            open(fname, 'a').close()

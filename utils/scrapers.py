@@ -14,9 +14,9 @@ def get_results(url: str, bot: telegram.Bot):
     :return: A generator object.
     """
     response = requests.get(url, headers=header)
+    if len(response.content) == 0:
+        bot.send_message(debugx_chat_id, "Proxy Response is empty")
     soup = bs(response.text, "lxml")
-    if len(soup.text) == 0:
-        bot.send_message(debugx_chat_id, "Proxy Soup is empty")
     resultset = soup.find_all("tr")[1:]
     if len(resultset) == 0:
         return
@@ -42,8 +42,8 @@ def get_results(url: str, bot: telegram.Bot):
 
 def get_magnet_from_page(url, bot):
     response = requests.get(url, headers=header)
+    if len(response.content) == 0:
+        bot.send_message(debugx_chat_id, "Magnet Response is empty")
     soup = bs(response.text, "lxml")
-    if len(soup.text) == 0:
-        bot.send_message(debugx_chat_id, "Magnet Soup is empty")
     resultset = soup.find('a', attrs={'href': re.compile("magnet.+")}).attrs['href']
     return resultset

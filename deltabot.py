@@ -4,6 +4,7 @@ import telegram
 from telegram.ext import Updater, CommandHandler
 
 from configs import *
+from utils.file_handlers import is_already_exist, keep_a_record
 from utils.scrapers import get_results
 from utils.toolkits import get_uploader_url
 
@@ -69,14 +70,17 @@ def actual_paginator(bot: telegram.Bot, url: str, stop: int):
     for page in range(stop):
         for thing in get_results(url + f"/{page + 1}/", bot):
             # TODO: Keep Track :(
-            # if not is_already_exist("QxR", str(thing)):
-            #     keep_a_record("QxR", str(thing))
+            if not is_already_exist("logs", str(thing)):
+                keep_a_record("logs", str(thing))
             print(thing)
-            bot.send_message(debugx_chat_id, thing)
+            if DEBUG:
+                bot.send_message(debugx_chat_id, thing)
+
             num_results += 1
             results[num_results] = thing
         bot.send_message(triggerx_chat_id[-1], f"Page {page + 1} scraped!")
     flood_my_dict(bot, results)
+    bot.send_message(debugx_chat_id, str(results))
 
 
 def flood_my_dict(bot, results):
@@ -95,12 +99,17 @@ def flood_my_dict(bot, results):
         time.sleep(1.2)
 
 
+def logs(bot: telegram.Bot, update: telegram.Update):
+    bot.send_document(debugx_chat_id, open('logs', 'rb'))
+
+
 def main():
     updater = Updater("910267145:AAFIwWP72YWpA2X76sR8T6CYMP9Fr4Exa7Y")
     dp = updater.dispatcher
     dp.add_handler(CommandHandler("test_leechx", test_leechx))
     dp.add_handler(CommandHandler("paginator", paginator))
     dp.add_handler(CommandHandler("uploader", uploader))
+    dp.add_handler(CommandHandler("logs", logs))
     updater.start_polling()
     updater.idle()
 
