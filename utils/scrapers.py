@@ -17,14 +17,14 @@ def get_results(url: str, stop=2):
             return
         for item in resultset:
             data = [i for i in item.children]
-            url = "https://1337x.to"
-            url += data[1].contents[1].get("href")
+            follow_url = "https://1337x.to"
+            follow_url += data[1].contents[1].get("href")
             seeds = data[3].contents[0]
             leeches = data[5].contents[0]
             size = data[7].contents[0]
             age = data[9].contents[0]
             yield {
-                "url": url,
+                "follow_url": follow_url,
                 "seeds": seeds,
                 "leeches": leeches,
                 "size": size,
