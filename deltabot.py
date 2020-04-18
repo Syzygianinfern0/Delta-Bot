@@ -1,6 +1,7 @@
 import pprint
 import time
 
+import requests
 import telegram
 from telegram.ext import Updater, CommandHandler
 
@@ -70,7 +71,6 @@ def actual_paginator(bot: telegram.Bot, url: str, stop: int):
     num_results = 0
     for page in range(stop):
         for thing in get_results(url + f"/{page + 1}/", bot):
-            # TODO: Keep Track :(
             info = {field: thing[field] for field in ["magnet", "follow_url"]}
             if not is_already_exist("logs", str(info)):
                 keep_a_record("logs", str(info))
@@ -80,9 +80,12 @@ def actual_paginator(bot: telegram.Bot, url: str, stop: int):
 
             num_results += 1
             results[num_results] = thing
-        bot.send_message(triggerx_chat_id[-1], f"Page {page + 1} scraped!")
+        bot.send_message(debugx_chat_id, f"Page {page + 1} scraped!")
     flood_my_dict(bot, results)
-    bot.send_message(debugx_chat_id, pprint.pformat(results))
+    paste_code = paste_data.copy()
+    paste_code['api_paste_code'] = str(pprint.pformat(results))
+    res = requests.post(paste_url, paste_code)
+    bot.send_message(debugx_chat_id, f"Scraped data at {res.content.decode('utf-8')}")
 
 
 def flood_my_dict(bot, results):
