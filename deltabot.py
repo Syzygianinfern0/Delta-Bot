@@ -40,7 +40,8 @@ def uploader(bot: telegram.Bot, update: telegram.Update):
         stop = int(cmd[2])
     if DEBUG:
         bot.send_message(debugx_chat_id, f"URL: {url} \nStop: {stop}")
-    actual_paginator(bot, url, stop)
+    paste_name = str(update.message.date + datetime.timedelta(hours=5, minutes=30))
+    actual_paginator(bot, url, stop, paste_name)
 
 
 def paginator(bot: telegram.Bot, update: telegram.Update):
