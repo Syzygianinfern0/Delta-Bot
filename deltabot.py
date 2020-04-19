@@ -74,11 +74,11 @@ def actual_paginator(bot: telegram.Bot, url: str, stop: int, paste_name: str):
     for page in range(stop):
         for thing in get_results(url + f"/{page + 1}/", bot):
             info = {field: thing[field] for field in ["magnet", "follow_url"]}
-            if is_already_exist("logs", str(info['follow_url']).split('/')[-2]):
+            if is_already_exist("logs.txt", str(info['follow_url']).split('/')[-2]):
                 bot.send_message(debugx_chat_id, f"Skipping ```{str(info['follow_url']).split('/')[-2]}```",
                                  parse_mode="Markdown")
             else:
-                keep_a_record("logs", str(info))
+                keep_a_record("logs.txt", str(info))
                 print(str(info['follow_url']).split('/')[-2])
                 if DEBUG:
                     bot.send_message(debugx_chat_id, info['follow_url'])
@@ -111,7 +111,7 @@ def flood_my_dict(bot, results):
 
 
 def logs(bot: telegram.Bot, update: telegram.Update):
-    bot.send_document(debugx_chat_id, open('logs', 'rb'))
+    bot.send_document(debugx_chat_id, open('logs.txt', 'rb'))
 
 
 def main():

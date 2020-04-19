@@ -1,5 +1,4 @@
 .idea
 .vscode
 tests/
-logs
 __pycache__/
