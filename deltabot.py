@@ -1,3 +1,4 @@
+import datetime
 import pprint
 import time
 
@@ -63,28 +64,33 @@ def paginator(bot: telegram.Bot, update: telegram.Update):
         stop = int(cmd[2])
     if DEBUG:
         bot.send_message(debugx_chat_id, f"URL: {url} \nStop: {stop}")
-    actual_paginator(bot, url, stop)
+    paste_name = str(update.message.date + datetime.timedelta(hours=5, minutes=30))
+    actual_paginator(bot, url, stop, paste_name)
 
 
-def actual_paginator(bot: telegram.Bot, url: str, stop: int):
+def actual_paginator(bot: telegram.Bot, url: str, stop: int, paste_name: str):
     results = dict()
     num_results = 0
     for page in range(stop):
         for thing in get_results(url + f"/{page + 1}/", bot):
             info = {field: thing[field] for field in ["magnet", "follow_url"]}
-            if not is_already_exist("logs", str(info)):
+            if is_already_exist("logs", str(info['follow_url']).split('/')[-2]):
+                bot.send_message(debugx_chat_id, f"Skipping ```{str(info['follow_url']).split('/')[-2]}```",
+                                 parse_mode="Markdown")
+            else:
                 keep_a_record("logs", str(info))
-            print(info['follow_url'])
-            if DEBUG:
-                bot.send_message(debugx_chat_id, info['follow_url'])
+                print(str(info['follow_url']).split('/')[-2])
+                if DEBUG:
+                    bot.send_message(debugx_chat_id, info['follow_url'])
 
-            num_results += 1
-            results[num_results] = thing
+                num_results += 1
+                results[num_results] = thing
         bot.send_message(debugx_chat_id, f"Page {page + 1} scraped!")
     flood_my_dict(bot, results)
     paste_code = paste_data.copy()
     paste_code['api_paste_code'] = str(pprint.pformat(results))
-    res = requests.post(paste_url, paste_code)
+    paste_code['api_paste_name'] = paste_name
+    res = requests.post(paste_url, paste_code, headers=header)
     bot.send_message(debugx_chat_id, f"Scraped data at {res.content.decode('utf-8')}")
 
 

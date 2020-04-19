@@ -16,5 +16,6 @@ paste_data = {
     'api_user_key': 'fac0b5e856e0f063e1834e1dd8663283',
     'api_option': 'paste',
     'api_paste_code': None,
-    'api_paste_format': 'json'
+    'api_paste_format': 'json',
+    'api_paste_name': 'DeltaBot'
 }
