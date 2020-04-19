@@ -72,11 +72,14 @@ def actual_paginator(bot: telegram.Bot, url: str, stop: int, paste_name: str):
     results = dict()
     num_results = 0
     for page in range(stop):
+        skips = list()
         for thing in get_results(url + f"/{page + 1}/", bot):
             info = {field: thing[field] for field in ["magnet", "follow_url"]}
             if is_already_exist("logs.txt", str(info['follow_url']).split('/')[-2]):
-                bot.send_message(debugx_chat_id, f"Skipping ```{str(info['follow_url']).split('/')[-2]}```",
-                                 parse_mode="Markdown")
+                if DEBUG:
+                    bot.send_message(debugx_chat_id, f"Skipping ```{str(info['follow_url']).split('/')[-2]}```",
+                                     parse_mode="Markdown")
+                skips.append(str(info['follow_url']).split('/')[-2])
             else:
                 keep_a_record("logs.txt", str(info))
                 print(str(info['follow_url']).split('/')[-2])
@@ -85,7 +88,9 @@ def actual_paginator(bot: telegram.Bot, url: str, stop: int, paste_name: str):
 
                 num_results += 1
                 results[num_results] = thing
-        bot.send_message(debugx_chat_id, f"Page {page + 1} scraped!")
+        skips_str = '```' + '```\n```'.join(skips) + '```'
+        bot.send_message(debugx_chat_id, f"Page {page + 1} scraped!"
+                                         f"\nSkips ({len(skips)}): {skips_str}", parse_mode="Markdown")
     flood_my_dict(bot, results)
     paste_code = paste_data.copy()
     paste_code['api_paste_code'] = str(pprint.pformat(results))
