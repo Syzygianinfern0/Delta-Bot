@@ -27,8 +27,8 @@ def get_results(url: str, bot: telegram.Bot):
         magnet = get_magnet_from_page(follow_url, bot)
         seeds = data[3].contents[0]
         leeches = data[5].contents[0]
-        size = data[7].contents[0]
-        age = data[9].contents[0]
+        size = data[9].contents[0]
+        age = data[7].contents[0]
 
         yield {
             "magnet": magnet,
